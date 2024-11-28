@@ -8,21 +8,23 @@ import {
   HelpCircle,
   Menu,
   Box,
+  Bell,
   MessageSquare,
-  Activity,
-  Bell
+  Activity
 } from 'lucide-react';
 import { useState } from 'react';
+import { useNotificationStore } from '../store/useNotificationStore';
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const { unreadCount } = useNotificationStore();
 
   const navItems = [
     { icon: Activity, label: 'Dashboard', path: '/' },
     { icon: MessageSquare, label: 'Chat', path: '/chat', badge: 3 },
     { icon: Users, label: 'Users', path: '/users' },
     { icon: Building2, label: 'Companies', path: '/companies' },
-    { icon: Bell, label: 'Notifications', path: '/notifications', badge: 5 },
+    { icon: Bell, label: 'Notifications', path: '/notifications', badge: unreadCount },
     { icon: Settings, label: 'Settings', path: '/settings' },
     { icon: HelpCircle, label: 'Support', path: '/support' },
   ];
@@ -66,8 +68,8 @@ const Sidebar = () => {
               <>
                 <span>{item.label}</span>
                 {item.badge && (
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 bg-primary text-xs py-0.5 px-2 rounded-full">
-                    {item.badge}
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 bg-red-500 text-white text-xs font-bold py-0.5 px-2 rounded-full shadow-md animate-pulse-soft">
+                    {item.badge > 99 ? '99+' : item.badge}
                   </span>
                 )}
               </>

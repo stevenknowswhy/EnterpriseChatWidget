@@ -27,7 +27,7 @@ const Layout = () => {
                     onClick={() => setIsNotificationOpen(!isNotificationOpen)}
                     className="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
                   >
-                    <Bell size={20} />
+                    <Bell size={20} className={`${isDarkMode ? 'text-blue-300' : ''}`} />
                     {unreadCount > 0 && (
                       <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                         {unreadCount}
@@ -43,7 +43,7 @@ const Layout = () => {
                   onClick={toggleTheme}
                   className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
-                  {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+                  {isDarkMode ? <Sun size={20} className="text-yellow-400" /> : <Moon size={20} />}
                 </button>
                 <div className="flex items-center gap-3 pl-4 border-l dark:border-gray-700">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-medium">
