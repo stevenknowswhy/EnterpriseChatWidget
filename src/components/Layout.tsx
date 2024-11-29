@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, Link } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import NotificationDropdown from './NotificationDropdown';
 import { useThemeStore } from '../store/useThemeStore';
@@ -81,6 +81,12 @@ const Layout = () => {
                           <Settings size={16} className="mr-3" />
                           Settings
                         </button>
+                        <Link
+                          to="/profile-settings"
+                          className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        >
+                          Profile Settings
+                        </Link>
                         <button 
                           onClick={handleLogout}
                           className="flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"

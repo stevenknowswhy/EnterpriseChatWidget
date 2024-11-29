@@ -9,6 +9,7 @@ import Settings from './pages/Settings';
 import Support from './pages/Support';
 import Chat from './pages/Chat';
 import Notifications from './pages/Notifications';
+import ProfileSettings from './pages/ProfileSettings';
 import Login from './pages/Login';
 
 // Protected Route Component
@@ -41,6 +42,7 @@ function App() {
           <Route path="companies" element={<Companies />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="profile-settings" element={<ProfileSettings />} />
           <Route path="support" element={<Support />} />
         </Route>
       </Routes>

@@ -101,7 +101,7 @@ const Settings = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">Settings</h1>
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">Admin Settings</h1>
         <button
           onClick={handleSaveChanges}
           className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-300"

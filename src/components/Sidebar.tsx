@@ -25,7 +25,7 @@ const Sidebar = () => {
     { icon: Users, label: 'Users', path: '/users' },
     { icon: Building2, label: 'Companies', path: '/companies' },
     { icon: Bell, label: 'Notifications', path: '/notifications', badge: unreadCount },
-    { icon: Settings, label: 'Settings', path: '/settings' },
+    { icon: Settings, label: 'Admin Settings', path: '/settings' },
     { icon: HelpCircle, label: 'Support', path: '/support' },
   ];
 
