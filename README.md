@@ -1,6 +1,7 @@
 # Enterprise Chat Widget
 
-A modern, feature-rich chat widget built with React, TypeScript, and Tailwind CSS. This enterprise-grade solution provides real-time chat functionality with a beautiful UI and comprehensive features.
+## Overview
+A comprehensive, modern enterprise communication platform built with React, TypeScript, and Tailwind CSS. Designed for seamless team collaboration and communication.
 
 ## Features
 
@@ -12,6 +13,24 @@ A modern, feature-rich chat widget built with React, TypeScript, and Tailwind CS
 - ⚙️ Customizable settings
 - 🎨 Modern UI with Tailwind CSS
 - 📱 Responsive design
+
+### Authentication
+- Secure login system
+- Role-based access control
+- Persistent authentication state
+- Protected routing
+
+### Dark Mode
+- Full dark mode support
+- Responsive design across all components
+- Smooth theme transitions
+- Consistent color palette
+
+### Dashboard
+- Compliance tracking
+- Audit log monitoring
+- Real-time metrics visualization
+- Interactive charts and statistics
 
 ## Tech Stack
 
@@ -95,6 +114,28 @@ src/
 - Role-based access control
 - Company associations
 - Activity tracking
+
+## Authentication
+Test Credentials:
+- Email: `admin@example.com`
+- Password: `password`
+
+## Testing
+- Comprehensive unit and integration tests
+- Mock authentication for development
+- Responsive design testing
+
+## Current Limitations
+- Mock authentication
+- Needs backend integration
+- Ongoing feature development
+
+## Roadmap
+- [ ] Implement full authentication backend
+- [ ] Add internationalization
+- [ ] Enhance performance optimization
+- [ ] Comprehensive test coverage
+- [ ] Advanced analytics and reporting
 
 ## Contributing
 

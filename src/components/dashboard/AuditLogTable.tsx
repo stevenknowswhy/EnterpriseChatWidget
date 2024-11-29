@@ -9,18 +9,18 @@ const AuditLogTable = ({ logs }: AuditLogTableProps) => {
   const getSeverityColor = (severity: AuditLog['severity']) => {
     switch (severity) {
       case 'high':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300';
       case 'low':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300';
     }
   };
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
       <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-semibold">Recent Audit Logs</h2>
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Recent Audit Logs</h2>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">

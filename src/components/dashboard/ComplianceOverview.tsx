@@ -25,21 +25,21 @@ const ComplianceOverview = ({ metrics }: ComplianceOverviewProps) => {
       {metrics.map((metric) => (
         <div key={metric.id} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-medium">{metric.name}</h3>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white">{metric.name}</h3>
             {getStatusIcon(metric.status)}
           </div>
           <div className="space-y-2">
             <div className="flex justify-between">
               <span className="text-gray-500 dark:text-gray-400">Current</span>
-              <span className="font-semibold">{metric.value}%</span>
+              <span className="font-semibold text-gray-900 dark:text-white">{metric.value}%</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-500 dark:text-gray-400">Target</span>
-              <span className="font-semibold">{metric.target}%</span>
+              <span className="font-semibold text-gray-900 dark:text-white">{metric.target}%</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-500 dark:text-gray-400">Trend</span>
-              <span className={metric.trend >= 0 ? 'text-green-500' : 'text-red-500'}>
+              <span className={`font-semibold ${metric.trend >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                 {metric.trend >= 0 ? '+' : ''}{metric.trend}%
               </span>
             </div>
