@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Outlet, useNavigate, Link } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import NotificationDropdown from './NotificationDropdown';
@@ -6,6 +6,7 @@ import { useThemeStore } from '../store/useThemeStore';
 import { useNotificationStore } from '../store/useNotificationStore';
 import { useAuthStore } from '../store/useAuthStore';
 import { Sun, Moon, Bell, ChevronDown, LogOut, Settings } from 'lucide-react';
+import useClickOutside from '../hooks/useClickOutside';
 
 const Layout = () => {
   const { isDarkMode, toggleTheme } = useThemeStore();
@@ -14,6 +15,9 @@ const Layout = () => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  useClickOutside(userMenuRef, () => setIsUserMenuOpen(false));
 
   const handleLogout = () => {
     logout();
@@ -54,7 +58,7 @@ const Layout = () => {
                 >
                   {isDarkMode ? <Sun size={20} className="text-yellow-400" /> : <Moon size={20} />}
                 </button>
-                <div className="relative">
+                <div className="relative" ref={userMenuRef}>
                   <button 
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                     className="flex items-center gap-3 pl-4 border-l dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"

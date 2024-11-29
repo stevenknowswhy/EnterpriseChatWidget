@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { User as UserIcon, Mail, Settings, Bell, MessageSquare, Globe, Eye, Plus, ArrowLeft, Camera } from 'lucide-react';
+import { User as UserIcon, Mail, Settings, Bell, MessageSquare, Globe, Eye, Plus, ArrowLeft, Camera, Edit, Trash2, RotateCcw } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { auth } from '../lib/firebase';
 import { updateProfile } from 'firebase/auth';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { PreferencesPanel } from '../components/PreferencesPanel';
 import { NotificationsPanel } from '../components/NotificationsPanel';
+import { useStore } from '../store/useStore';
+import useMessagesStore from '../store/useMessagesStore';
 
 const inputClasses = "w-full px-4 h-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200";
 const labelClasses = "block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2";
@@ -84,6 +86,7 @@ const pronounOptions = [
 
 const ProfileSettings: React.FC = () => {
   const { user, login } = useAuthStore();
+  const messagesStore = useMessagesStore();
   const [activeTab, setActiveTab] = useState<TabType>('basic');
   const [activeMenuItem, setActiveMenuItem] = useState('personal');
   const [info, setInfo] = useState<PersonalInfo>({
@@ -129,12 +132,11 @@ const ProfileSettings: React.FC = () => {
   };
 
   const menuItems = [
-    { icon: <UserIcon size={20} />, label: 'Personal Info', id: 'personal', description: 'Update your profile and personal details' },
-    { icon: <Settings size={20} />, label: 'Preferences', id: 'preferences', description: 'Customize your dashboard experience' },
+    { icon: <UserIcon size={20} />, label: 'Personal', id: 'personal', description: 'Manage your personal information' },
     { icon: <Bell size={20} />, label: 'Notifications', id: 'notifications', description: 'Configure notification settings' },
     { icon: <MessageSquare size={20} />, label: 'Messages', id: 'messages', description: 'Manage message preferences' },
-    { icon: <Globe size={20} />, label: 'Language', id: 'language', description: 'Set your preferred language' },
-    { icon: <Eye size={20} />, label: 'Accessibility', id: 'accessibility', description: 'Manage accessibility settings' },
+    { icon: <Globe size={20} />, label: 'Language and Location', id: 'language', description: 'Set your preferred language and location' },
+    { icon: <Eye size={20} />, label: 'Accessibility', id: 'accessibility', description: 'Manage display and accessibility settings' },
   ];
 
   return (
@@ -578,16 +580,324 @@ const ProfileSettings: React.FC = () => {
                 </div>
               )}
 
-              {activeMenuItem === 'preferences' && (
+              {activeMenuItem === 'accessibility' && (
                 <div className="mt-6">
                   <div className="space-y-1">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Preferences</h3>
+                    <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Display and Accessibility</h3>
                     <p className="max-w-2xl text-sm text-gray-500 dark:text-gray-400">
-                      Customize your dashboard experience and accessibility settings.
+                      Customize your display preferences and accessibility settings
                     </p>
                   </div>
                   <div className="mt-6">
                     <PreferencesPanel />
+                  </div>
+                </div>
+              )}
+
+              {activeMenuItem === 'messages' && (
+                <div className="mt-6">
+                  <div className="space-y-1">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Message Preferences</h3>
+                    <p className="max-w-2xl text-sm text-gray-500 dark:text-gray-400">
+                      Manage your message templates, labels, and preferences.
+                    </p>
+                  </div>
+
+                  <div className="mt-6 space-y-8">
+                    {/* Auto-Reply Section */}
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-base font-medium text-gray-900 dark:text-gray-100">Auto-Reply</h4>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            Automatically respond to messages when you're away
+                          </p>
+                        </div>
+                        <div className="flex items-center">
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                              type="checkbox"
+                              className="sr-only peer"
+                              checked={messagesStore.autoReply}
+                              onChange={(e) => messagesStore.setAutoReply(e.target.checked)}
+                            />
+                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Message Templates Section */}
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-base font-medium text-gray-900 dark:text-gray-100">Message Templates</h4>
+                        <button
+                          onClick={() => {
+                            const name = window.prompt('Enter template name:');
+                            const content = window.prompt('Enter template content:');
+                            if (name && content) {
+                              messagesStore.addTemplate({ name, content });
+                            }
+                          }}
+                          className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        >
+                          <Plus className="h-4 w-4 mr-1" />
+                          Add Template
+                        </button>
+                      </div>
+                      <div className="space-y-3">
+                        {messagesStore.templates.map((template) => (
+                          <div
+                            key={template.id}
+                            className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg shadow"
+                          >
+                            <div>
+                              <h5 className="font-medium text-gray-900 dark:text-gray-100">{template.name}</h5>
+                              <p className="text-sm text-gray-500 dark:text-gray-400">{template.content}</p>
+                            </div>
+                            <div className="flex space-x-2">
+                              <button
+                                onClick={() => {
+                                  const content = window.prompt('Edit template content:', template.content);
+                                  if (content) {
+                                    messagesStore.updateTemplate(template.id, { content });
+                                  }
+                                }}
+                                className="p-1.5 text-gray-400 hover:text-gray-500"
+                              >
+                                <Edit className="h-4 w-4" />
+                              </button>
+                              <button
+                                onClick={() => messagesStore.deleteTemplate(template.id)}
+                                className="p-1.5 text-red-400 hover:text-red-500"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Message Labels Section */}
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-base font-medium text-gray-900 dark:text-gray-100">Message Labels</h4>
+                        <button
+                          onClick={() => {
+                            const name = window.prompt('Enter label name:');
+                            if (name) {
+                              messagesStore.addLabel({ name, color: '#' + Math.floor(Math.random()*16777215).toString(16) });
+                            }
+                          }}
+                          className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        >
+                          <Plus className="h-4 w-4 mr-1" />
+                          Add Label
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        {messagesStore.labels.map((label) => (
+                          <div
+                            key={label.id}
+                            className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg shadow"
+                          >
+                            <div className="flex items-center space-x-2">
+                              <div
+                                className="w-4 h-4 rounded-full"
+                                style={{ backgroundColor: label.color }}
+                              />
+                              <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                {label.name}
+                              </span>
+                            </div>
+                            <button
+                              onClick={() => messagesStore.deleteLabel(label.id)}
+                              className="p-1.5 text-red-400 hover:text-red-500"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Deleted Messages Section */}
+                    <div>
+                      <h4 className="text-base font-medium text-gray-900 dark:text-gray-100 mb-4">Deleted Messages</h4>
+                      <div className="space-y-3">
+                        {messagesStore.deletedMessages.map((message) => (
+                          <div
+                            key={message.id}
+                            className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow"
+                          >
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center space-x-4">
+                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                  From: {message.sender}
+                                </span>
+                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                  To: {message.recipient}
+                                </span>
+                              </div>
+                              <span className="text-sm text-gray-500 dark:text-gray-400">
+                                {new Date(message.deletedAt).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <p className="text-gray-900 dark:text-gray-100 mb-2">{message.content}</p>
+                            <div className="flex items-center justify-between">
+                              <div className="flex gap-1">
+                                {message.labels.map((labelId) => {
+                                  const label = messagesStore.labels.find((l) => l.id === labelId);
+                                  return label ? (
+                                    <span
+                                      key={label.id}
+                                      className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                                      style={{
+                                        backgroundColor: label.color + '40',
+                                        color: label.color,
+                                      }}
+                                    >
+                                      {label.name}
+                                    </span>
+                                  ) : null;
+                                })}
+                              </div>
+                              <div className="flex space-x-2">
+                                <button
+                                  onClick={() => messagesStore.restoreDeletedMessage(message.id)}
+                                  className="p-1.5 text-gray-400 hover:text-gray-500"
+                                  title="Restore Message"
+                                >
+                                  <RotateCcw className="h-4 w-4" />
+                                </button>
+                                <button
+                                  onClick={() => messagesStore.permanentlyDeleteMessage(message.id)}
+                                  className="p-1.5 text-red-400 hover:text-red-500"
+                                  title="Permanently Delete"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        {messagesStore.deletedMessages.length === 0 && (
+                          <p className="text-center text-gray-500 dark:text-gray-400 py-4">
+                            No deleted messages to display
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeMenuItem === 'language' && (
+                <div className="mt-6">
+                  <div className="space-y-1">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Language and Location</h3>
+                    <p className="max-w-2xl text-sm text-gray-500 dark:text-gray-400">
+                      Configure your language preferences and localization settings
+                    </p>
+                  </div>
+
+                  <div className="mt-6">
+                    <h4 className="text-base font-medium text-gray-900 dark:text-gray-100 mb-4">Language Selection</h4>
+                    <div className="space-y-4">
+                      <div>
+                        <label htmlFor="language" className={labelClasses}>
+                          Interface Language
+                        </label>
+                        <select
+                          id="language"
+                          name="language"
+                          className={inputClasses}
+                          defaultValue="en"
+                        >
+                          <option value="en">English</option>
+                          <option value="es">Español</option>
+                          <option value="fr">Français</option>
+                          <option value="de">Deutsch</option>
+                          <option value="it">Italiano</option>
+                          <option value="pt">Português</option>
+                          <option value="ru">Русский</option>
+                          <option value="zh">中文</option>
+                          <option value="ja">日本語</option>
+                          <option value="ko">한국어</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-8">
+                    <h4 className="text-base font-medium text-gray-900 dark:text-gray-100 mb-4">Localization Settings</h4>
+                    <div className="space-y-4">
+                      <div>
+                        <label htmlFor="timezone" className={labelClasses}>
+                          Time Zone
+                        </label>
+                        <select
+                          id="timezone"
+                          name="timezone"
+                          className={inputClasses}
+                          defaultValue="America/Los_Angeles"
+                        >
+                          <option value="America/Los_Angeles">Los Angeles (UTC-8)</option>
+                          <option value="America/New_York">New York (UTC-5)</option>
+                          <option value="America/Chicago">Chicago (UTC-6)</option>
+                          <option value="America/Denver">Denver (UTC-7)</option>
+                          <option value="America/Phoenix">Phoenix (UTC-7)</option>
+                          <option value="America/Anchorage">Anchorage (UTC-9)</option>
+                          <option value="Pacific/Honolulu">Honolulu (UTC-10)</option>
+                          <option value="Europe/London">London (UTC+0)</option>
+                          <option value="Europe/Paris">Paris (UTC+1)</option>
+                          <option value="Asia/Tokyo">Tokyo (UTC+9)</option>
+                          <option value="Asia/Shanghai">Shanghai (UTC+8)</option>
+                          <option value="Australia/Sydney">Sydney (UTC+11)</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label htmlFor="currency" className={labelClasses}>
+                          Currency
+                        </label>
+                        <select
+                          id="currency"
+                          name="currency"
+                          className={inputClasses}
+                          defaultValue="USD"
+                        >
+                          <option value="USD">US Dollar ($)</option>
+                          <option value="EUR">Euro (€)</option>
+                          <option value="GBP">British Pound (£)</option>
+                          <option value="JPY">Japanese Yen (¥)</option>
+                          <option value="AUD">Australian Dollar (A$)</option>
+                          <option value="CAD">Canadian Dollar (C$)</option>
+                          <option value="CHF">Swiss Franc (CHF)</option>
+                          <option value="CNY">Chinese Yuan (¥)</option>
+                          <option value="INR">Indian Rupee (₹)</option>
+                          <option value="BRL">Brazilian Real (R$)</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label htmlFor="dateFormat" className={labelClasses}>
+                          Date Format
+                        </label>
+                        <select
+                          id="dateFormat"
+                          name="dateFormat"
+                          className={inputClasses}
+                          defaultValue="MM/DD/YYYY"
+                        >
+                          <option value="MM/DD/YYYY">MM/DD/YYYY (US)</option>
+                          <option value="DD/MM/YYYY">DD/MM/YYYY (UK/EU)</option>
+                          <option value="YYYY-MM-DD">YYYY-MM-DD (ISO)</option>
+                          <option value="YYYY.MM.DD">YYYY.MM.DD (Asia)</option>
+                        </select>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}

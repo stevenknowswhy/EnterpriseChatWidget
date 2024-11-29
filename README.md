@@ -9,14 +9,22 @@ A modern, enterprise-grade chat widget built with React, TypeScript, and Tailwin
 - Profile management with customizable fields
 - Profile photo upload and management
 - Comprehensive personal information fields
+- Profile dropdown menu with click-outside behavior
+- Quick access to Settings and Profile Settings
 
-### Preferences
+### Accessibility & Display
 - Dark/Light mode toggle
 - Contrast adjustment settings
 - Text size customization
 - System features selection
 - Reset to default options
 - Persistent preferences storage
+- Comprehensive accessibility controls
+- Language and localization settings
+  - Multiple language support
+  - Time zone selection
+  - Currency format
+  - Date format preferences
 
 ### Notifications
 - Email notification preferences
@@ -36,6 +44,8 @@ A modern, enterprise-grade chat widget built with React, TypeScript, and Tailwin
 - Intuitive navigation
 - Tailwind CSS styling
 - Smooth transitions and animations
+- Click-outside behavior for dropdowns
+- Consistent UI patterns
 
 ## Technology Stack
 
@@ -45,6 +55,8 @@ A modern, enterprise-grade chat widget built with React, TypeScript, and Tailwin
 - Firebase (Authentication & Storage)
 - Zustand (State Management)
   - Persist middleware for local storage
+- Custom React Hooks
+  - useClickOutside for improved UX
 
 ## Getting Started
 
@@ -78,6 +90,8 @@ src/
 │   ├── useAuthStore.ts
 │   ├── usePreferencesStore.ts
 │   └── useNotificationsStore.ts
+├── hooks/             # Custom React hooks
+│   └── useClickOutside.ts
 ├── lib/               # Utility functions and configurations
 └── styles/            # Global styles and Tailwind config
 ```
@@ -89,11 +103,13 @@ The application uses Zustand for state management with the following stores:
 ### Auth Store
 - User authentication state
 - Profile information
+- Logout functionality
 
 ### Preferences Store
 - UI preferences
 - Accessibility settings
 - System features
+- Language and localization
 
 ### Notifications Store
 - Email notifications
