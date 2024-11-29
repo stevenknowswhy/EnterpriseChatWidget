@@ -64,6 +64,188 @@ interface Notification {
 }
 ```
 
+## Firestore Collections
+
+### Users Collection
+```typescript
+interface User {
+  uid: string;
+  email: string;
+  displayName: string;
+  role: 'user' | 'company_admin' | 'super_admin';
+  companyId?: string;  // For company admins and company users
+  phone?: string;
+  photo?: string;
+  bannerPhoto?: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+  lastLogin?: Timestamp;
+  status: 'active' | 'inactive' | 'suspended';
+  preferences?: {
+    theme: 'light' | 'dark' | 'system';
+    language: string;
+    timezone: string;
+    notifications: {
+      email: boolean;
+      sms: boolean;
+      push: boolean;
+    };
+  };
+}
+```
+
+### Companies Collection
+```typescript
+interface Company {
+  id: string;
+  companyName: string;
+  adminId: string;
+  industry?: string;
+  domain?: string;
+  logo?: string;
+  subscriptionTier: 'free' | 'basic' | 'pro' | 'enterprise';
+  status: 'active' | 'suspended' | 'cancelled';
+  employeeCount: number;
+  settings: {
+    allowedDomains: string[];
+    ssoEnabled: boolean;
+    chatFeatures: {
+      fileSharing: boolean;
+      videoCall: boolean;
+      screenSharing: boolean;
+      customization: boolean;
+    };
+  };
+  billing: {
+    plan: string;
+    nextBillingDate: Timestamp;
+    paymentMethod?: string;
+  };
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+```
+
+### Departments Collection
+```typescript
+interface Department {
+  id: string;
+  companyId: string;
+  name: string;
+  description?: string;
+  managerId?: string;
+  parentDepartmentId?: string;
+  members: string[];  // User IDs
+  settings: {
+    autoAssignment: boolean;
+    workingHours: {
+      start: string;
+      end: string;
+      timezone: string;
+    };
+  };
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+```
+
+### Knowledge Base Collection
+```typescript
+interface KnowledgeBaseArticle {
+  id: string;
+  companyId: string;
+  title: string;
+  content: string;
+  category: string;
+  tags: string[];
+  authorId: string;
+  status: 'draft' | 'published' | 'archived';
+  viewCount: number;
+  helpfulCount: number;
+  lastUpdatedBy: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+  publishedAt?: Timestamp;
+}
+```
+
+### Chat Sessions Collection
+```typescript
+interface ChatSession {
+  id: string;
+  companyId: string;
+  departmentId?: string;
+  userId: string;
+  agentId?: string;
+  status: 'active' | 'closed' | 'transferred';
+  startedAt: Timestamp;
+  endedAt?: Timestamp;
+  metadata: {
+    browser: string;
+    os: string;
+    device: string;
+    location?: string;
+  };
+  ratings?: {
+    satisfaction: number;
+    comment?: string;
+    ratedAt: Timestamp;
+  };
+}
+```
+
+### Analytics Collection
+```typescript
+interface AnalyticsData {
+  id: string;
+  companyId: string;
+  type: 'daily' | 'weekly' | 'monthly';
+  period: string;
+  metrics: {
+    totalSessions: number;
+    averageResponseTime: number;
+    satisfactionScore: number;
+    resolvedChats: number;
+    activeUsers: number;
+    peakHours: {
+      hour: number;
+      count: number;
+    }[];
+  };
+  departmentMetrics: {
+    [departmentId: string]: {
+      sessions: number;
+      responseTime: number;
+      satisfaction: number;
+    };
+  };
+  createdAt: Timestamp;
+}
+```
+
+### Audit Logs Collection
+```typescript
+interface AuditLog {
+  id: string;
+  companyId: string;
+  userId: string;
+  action: string;
+  resource: string;
+  resourceId: string;
+  changes?: {
+    before: any;
+    after: any;
+  };
+  metadata: {
+    ip: string;
+    userAgent: string;
+    location?: string;
+  };
+  timestamp: Timestamp;
+  severity: 'low' | 'medium' | 'high';
+}
+```
+
 ## User Profile
 
 ```typescript
@@ -78,6 +260,7 @@ interface User {
 interface PersonalInfo {
   firstName: string;
   lastName: string;
+  preferredName?: string;
   email: string;
   bio?: string;
   pronouns?: string;
@@ -96,43 +279,40 @@ interface PersonalInfo {
   emergencyContactName?: string;
   emergencyContactPhone?: string;
   emergencyContactEmail?: string;
-  linkedin?: string;
-  twitter?: string;
-  facebook?: string;
-  instagram?: string;
-  bannerPhoto?: string;
+  socialMedia?: {
+    linkedin?: string;
+    twitter?: string;
+    facebook?: string;
+    instagram?: string;
+  };
 }
-```
-
-## Preferences
-
-```typescript
-interface PreferencesState {
-  defaultMode: 'light' | 'dark';
-  increaseContrast: boolean;
-  displayContrast: number;
-  textSize: number;
-  systemFeatures: string[];
-  setPreference: <K extends keyof Omit<PreferencesState, 'setPreference' | 'resetPreferences'>>(
-    key: K,
-    value: PreferencesState[K]
-  ) => void;
-  resetPreferences: () => void;
-}
-
-const defaultPreferences = {
-  defaultMode: 'light',
-  increaseContrast: false,
-  displayContrast: 50,
-  textSize: 100,
-  systemFeatures: [],
-};
 ```
 
 ## Notifications
 
 ```typescript
-type PhoneType = 'work' | 'personal' | 'other';
+interface Notification {
+  id: string;
+  userId: string;
+  companyId?: string;
+  title: string;
+  message: string;
+  type: 'message' | 'alert' | 'update' | 'system';
+  priority: 'low' | 'medium' | 'high';
+  read: boolean;
+  action?: {
+    type: string;
+    url?: string;
+    data?: any;
+  };
+  metadata?: {
+    sender?: string;
+    category?: string;
+    tags?: string[];
+  };
+  createdAt: Timestamp;
+  expiresAt?: Timestamp;
+}
 
 interface NotificationsState {
   emailNotifications: boolean;
@@ -218,8 +398,6 @@ interface ThemeStore {
   toggleTheme: () => void;
 }
 ```
-
-The application uses Zustand for state management with persist middleware for local storage. Each store (Auth, Preferences, Notifications) maintains its own state and provides actions to modify that state.
 
 ## System Requirements
 - TypeScript strict mode

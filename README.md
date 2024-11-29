@@ -4,8 +4,20 @@ A modern, enterprise-grade chat widget built with React, TypeScript, and Tailwin
 
 ## Features
 
+### Company Admin Dashboard
+- Complete admin authentication system
+- Role-based access control
+- Company profile management
+- Department management
+- User management
+- Analytics dashboard
+- Knowledge base management
+- Subscription management
+- Company-wide settings
+
 ### User Management
 - Firebase Authentication integration
+- Multi-role support (User, Company Admin)
 - Profile management with customizable fields
 - Profile photo upload and management
 - Comprehensive personal information fields
@@ -52,11 +64,17 @@ A modern, enterprise-grade chat widget built with React, TypeScript, and Tailwin
 - React
 - TypeScript
 - Tailwind CSS
-- Firebase (Authentication & Storage)
+- Firebase
+  - Authentication
+  - Firestore Database
+  - Storage
+  - Analytics
 - Zustand (State Management)
   - Persist middleware for local storage
 - Custom React Hooks
   - useClickOutside for improved UX
+  - useProfile for profile management
+  - useRoleGuard for access control
 
 ## Getting Started
 
@@ -72,8 +90,9 @@ npm install
 
 3. Set up Firebase:
    - Create a Firebase project
-   - Enable Authentication and Storage
+   - Enable Authentication, Firestore, Storage, and Analytics
    - Copy your Firebase config to `.env`
+   - Set up Firestore rules for role-based access
 
 4. Start the development server:
 ```bash
@@ -85,45 +104,93 @@ npm run dev
 ```
 src/
 ├── components/         # Reusable UI components
+│   ├── shared/        # Shared components
+│   └── guards/        # Route protection components
 ├── pages/             # Page components
+│   ├── admin/         # Admin dashboard pages
+│   └── user/          # User pages
 ├── store/             # Zustand stores
 │   ├── useAuthStore.ts
 │   ├── usePreferencesStore.ts
 │   └── useNotificationsStore.ts
 ├── hooks/             # Custom React hooks
-│   └── useClickOutside.ts
-├── lib/               # Utility functions and configurations
+├── config/            # Configuration files
+├── types/             # TypeScript types
 └── styles/            # Global styles and Tailwind config
 ```
 
-## State Management
+## Database Schema
 
-The application uses Zustand for state management with the following stores:
+### Users Collection
+```typescript
+interface User {
+  uid: string;
+  email: string;
+  displayName: string;
+  role: 'user' | 'company_admin' | 'super_admin';
+  companyId?: string;  // For company admins
+  phone?: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+```
 
-### Auth Store
-- User authentication state
-- Profile information
-- Logout functionality
+### Companies Collection
+```typescript
+interface Company {
+  id: string;
+  companyName: string;
+  adminId: string;
+  industry?: string;
+  subscriptionTier: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+```
 
-### Preferences Store
-- UI preferences
-- Accessibility settings
-- System features
-- Language and localization
+### Departments Collection
+```typescript
+interface Department {
+  id: string;
+  companyId: string;
+  name: string;
+  description?: string;
+  managerId?: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+```
 
-### Notifications Store
-- Email notifications
-- SMS preferences
-- Work hours settings
-- Notification permissions
+## Access Control
+
+The application implements role-based access control:
+
+- **Users**: Can access chat widget and personal settings
+- **Company Admins**: Full access to company dashboard and management features
+- **Super Admins**: System-wide access and management capabilities
+
+## Routes
+
+- `/` - Main chat widget
+- `/profile` - User profile settings
+- `/admin/login` - Company admin login/registration
+- `/admin/dashboard` - Admin dashboard
+- `/admin/knowledge-base` - Knowledge base management
+- `/admin/chat-management` - Chat configuration
+- `/admin/user-management` - User management
+- `/admin/department-management` - Department management
+- `/admin/analytics` - Analytics dashboard
+- `/admin/subscription` - Subscription management
+- `/admin/settings` - Company settings
+- `/admin/profile` - Admin profile
 
 ## Contributing
 
 1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## License
 

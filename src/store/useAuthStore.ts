@@ -1,43 +1,51 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { User } from '../types';
-import { auth } from '../lib/firebase';
+import { User, UserRole } from '../types/auth';
+import { auth } from '../config/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
-interface AuthStore {
+interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
-  login: (user: User) => void;
-  logout: () => void;
+  isLoading: boolean;
+  setUser: (user: User | null) => void;
+  setLoading: (loading: boolean) => void;
+  isCompanyAdmin: () => boolean;
+  isSuperAdmin: () => boolean;
 }
 
-export const useAuthStore = create<AuthStore>()(
+export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       isAuthenticated: false,
-      login: (user) => set({ user, isAuthenticated: true }),
-      logout: () => {
-        auth.signOut();
-        set({ user: null, isAuthenticated: false });
-      },
+      isLoading: true,
+      setUser: (user) => set({ user, isAuthenticated: !!user }),
+      setLoading: (loading) => set({ isLoading: loading }),
+      isCompanyAdmin: () => get().user?.role === 'company_admin',
+      isSuperAdmin: () => get().user?.role === 'super_admin',
     }),
-    { name: 'auth-storage' }
+    {
+      name: 'auth-storage',
+    }
   )
 );
 
-// Set up Firebase auth state listener
+// Set up auth state listener
 onAuthStateChanged(auth, (firebaseUser) => {
   if (firebaseUser) {
-    const user = {
-      id: firebaseUser.uid,
-      name: firebaseUser.displayName || 'User',
+    // You might want to fetch additional user data from Firestore here
+    const user: User = {
+      uid: firebaseUser.uid,
       email: firebaseUser.email || '',
-      role: 'user',
-      companyId: '1'
+      displayName: firebaseUser.displayName || '',
+      role: 'user', // This should be fetched from Firestore in a real app
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
-    useAuthStore.getState().login(user);
+    useAuthStore.getState().setUser(user);
   } else {
-    useAuthStore.getState().logout();
+    useAuthStore.getState().setUser(null);
   }
+  useAuthStore.getState().setLoading(false);
 });

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User as UserIcon, Mail, Settings, Bell, MessageSquare, Globe, Eye, Plus, ArrowLeft, Camera, Edit, Trash2, RotateCcw } from 'lucide-react';
+import { User as UserIcon, Mail, Settings, Bell, MessageSquare, Globe, Eye, Plus, ArrowLeft, Camera, Edit, Trash2, RotateCcw, Phone, User, Heart, AlertCircle, Share2 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { auth } from '../lib/firebase';
 import { updateProfile } from 'firebase/auth';
@@ -23,6 +23,8 @@ interface User {
 interface PersonalInfo {
   firstName: string;
   lastName: string;
+  preferredName: string;
+  username: string;
   email: string;
   bio?: string;
   pronouns?: string;
@@ -50,12 +52,37 @@ interface PersonalInfo {
 
 type TabType = 'basic' | 'contact' | 'personal' | 'emergency' | 'social';
 
-const tabs: { id: TabType; label: string }[] = [
-  { id: 'basic', label: 'Basic Info' },
-  { id: 'contact', label: 'Contact' },
-  { id: 'personal', label: 'Personal Details' },
-  { id: 'emergency', label: 'Emergency Contact' },
-  { id: 'social', label: 'Social' },
+const tabs: { id: TabType; label: string; icon: React.ReactNode; color: string }[] = [
+  { 
+    id: 'basic', 
+    label: 'Basic Info',
+    icon: <User size={18} />,
+    color: 'from-blue-500 to-blue-600'
+  },
+  { 
+    id: 'contact', 
+    label: 'Contact',
+    icon: <Phone size={18} />,
+    color: 'from-purple-500 to-purple-600'
+  },
+  { 
+    id: 'personal', 
+    label: 'Personal Details',
+    icon: <Heart size={18} />,
+    color: 'from-pink-500 to-pink-600'
+  },
+  { 
+    id: 'emergency', 
+    label: 'Emergency Contact',
+    icon: <AlertCircle size={18} />,
+    color: 'from-red-500 to-red-600'
+  },
+  { 
+    id: 'social', 
+    label: 'Social',
+    icon: <Share2 size={18} />,
+    color: 'from-green-500 to-green-600'
+  }
 ];
 
 const maritalStatusOptions = [
@@ -90,10 +117,12 @@ const ProfileSettings: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('basic');
   const [activeMenuItem, setActiveMenuItem] = useState('personal');
   const [info, setInfo] = useState<PersonalInfo>({
-    firstName: user?.name?.split(' ')[0] || '',
-    lastName: user?.name?.split(' ')[1] || '',
-    email: user?.email || '',
-    bannerPhoto: user?.bannerPhoto || '',
+    firstName: '',
+    lastName: '',
+    preferredName: '',
+    username: '',
+    email: '',
+    bio: '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error' | ''; text: string }>({ type: '', text: '' });
@@ -167,34 +196,44 @@ const ProfileSettings: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex gap-8">
-          {/* Sidebar */}
-          <div className="col-span-3">
-            <nav className="space-y-1">
-              {menuItems.map((item, index) => (
-                <a
-                  key={index}
-                  href="#"
+          {/* Left Sidebar */}
+          <div className="w-full max-w-xs">
+            <nav className="space-y-2 pt-12" aria-label="Sidebar">
+              {menuItems.map((item) => (
+                <button
+                  key={item.id}
                   onClick={() => setActiveMenuItem(item.id)}
-                  className={`flex items-start space-x-4 px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 ${
-                    activeMenuItem === item.id ? 'bg-blue-50 dark:bg-blue-900/20' : ''
-                  }`}
+                  className={`
+                    flex flex-col w-full px-6 py-4 text-left rounded-lg transition-colors duration-200
+                    ${activeMenuItem === item.id
+                      ? 'bg-blue-50 dark:bg-blue-900/20'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                    }
+                  `}
                 >
-                  <div className="flex-shrink-0 mt-1">
-                    <div className={`p-2 rounded-lg ${
-                      activeMenuItem === item.id ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
-                    }`}>
+                  <div className="flex items-center gap-3">
+                    <span className={`
+                      ${activeMenuItem === item.id
+                        ? 'text-blue-600 dark:text-blue-400'
+                        : 'text-gray-500 dark:text-gray-400'
+                      }
+                    `}>
                       {item.icon}
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className={`text-sm font-medium ${
-                      activeMenuItem === item.id ? 'text-blue-600 dark:text-blue-400' : 'text-gray-900 dark:text-gray-100'
-                    }`}>
+                    </span>
+                    <span className={`
+                      font-medium
+                      ${activeMenuItem === item.id
+                        ? 'text-blue-600 dark:text-blue-400'
+                        : 'text-gray-900 dark:text-gray-100'
+                      }
+                    `}>
                       {item.label}
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{item.description}</p>
+                    </span>
                   </div>
-                </a>
+                  <p className="mt-1 ml-9 text-sm text-gray-500 dark:text-gray-400">
+                    {item.description}
+                  </p>
+                </button>
               ))}
             </nav>
           </div>
@@ -249,19 +288,21 @@ const ProfileSettings: React.FC = () => {
                     <div className="mt-6">
                       <div className="space-y-6 sm:space-y-5">
                         {/* Tabs */}
-                        <nav className="flex space-x-4" aria-label="Tabs">
+                        <nav className="flex flex-wrap gap-3" aria-label="Tabs">
                           {tabs.map((tab) => (
                             <button
                               key={tab.id}
                               onClick={() => setActiveTab(tab.id)}
                               className={`
-                                px-3 py-2 text-sm font-medium rounded-md
+                                flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl
+                                transition-all duration-200 shadow-sm hover:shadow-md
                                 ${activeTab === tab.id
-                                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
-                                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+                                  ? `bg-gradient-to-r ${tab.color} text-white shadow-lg scale-105`
+                                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
                                 }
                               `}
                             >
+                              {tab.icon}
                               {tab.label}
                             </button>
                           ))}
@@ -269,8 +310,9 @@ const ProfileSettings: React.FC = () => {
 
                         {/* Tab Panels */}
                         {activeTab === 'basic' && (
-                          <>
-                            <div className="grid grid-cols-2 gap-6">
+                          <div className="space-y-8">
+                            {/* Names Section */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                               <div>
                                 <label htmlFor="firstName" className={labelClasses}>First Name</label>
                                 <input
@@ -279,6 +321,7 @@ const ProfileSettings: React.FC = () => {
                                   className={inputClasses}
                                   value={info.firstName}
                                   onChange={(e) => handleInputChange('firstName', e.target.value)}
+                                  placeholder="Enter your first name"
                                 />
                               </div>
                               <div>
@@ -289,10 +332,67 @@ const ProfileSettings: React.FC = () => {
                                   className={inputClasses}
                                   value={info.lastName}
                                   onChange={(e) => handleInputChange('lastName', e.target.value)}
+                                  placeholder="Enter your last name"
+                                />
+                              </div>
+                              <div>
+                                <label htmlFor="preferredName" className={labelClasses}>Preferred Name</label>
+                                <input
+                                  type="text"
+                                  id="preferredName"
+                                  className={inputClasses}
+                                  value={info.preferredName}
+                                  onChange={(e) => handleInputChange('preferredName', e.target.value)}
+                                  placeholder="How would you like to be called?"
+                                />
+                              </div>
+                              <div>
+                                <label htmlFor="username" className={labelClasses}>Username</label>
+                                <input
+                                  type="text"
+                                  id="username"
+                                  className={inputClasses}
+                                  value={info.username}
+                                  onChange={(e) => handleInputChange('username', e.target.value)}
+                                  placeholder="Choose a unique username"
                                 />
                               </div>
                             </div>
 
+                            {/* Password Section */}
+                            <div className="space-y-4">
+                              <div className="flex items-center justify-between">
+                                <h4 className="text-base font-medium text-gray-900 dark:text-gray-100">Change Password</h4>
+                                <span className="text-sm text-gray-500 dark:text-gray-400">Optional</span>
+                              </div>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                  <label htmlFor="newPassword" className={labelClasses}>New Password</label>
+                                  <input
+                                    type="password"
+                                    id="newPassword"
+                                    className={inputClasses}
+                                    placeholder="Enter new password"
+                                    onChange={(e) => handleInputChange('newPassword', e.target.value)}
+                                  />
+                                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                    Must be at least 8 characters
+                                  </p>
+                                </div>
+                                <div>
+                                  <label htmlFor="confirmPassword" className={labelClasses}>Confirm Password</label>
+                                  <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    className={inputClasses}
+                                    placeholder="Confirm new password"
+                                    onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Bio Section */}
                             <div>
                               <label htmlFor="bio" className={labelClasses}>Bio</label>
                               <textarea
@@ -301,10 +401,24 @@ const ProfileSettings: React.FC = () => {
                                 className={`${inputClasses} resize-none`}
                                 value={info.bio}
                                 onChange={(e) => handleInputChange('bio', e.target.value)}
-                                placeholder="Tell us about yourself..."
+                                placeholder="Tell us a little about yourself"
                               />
+                              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                Brief description for your profile
+                              </p>
                             </div>
-                          </>
+
+                            {/* Save Button */}
+                            <div className="flex justify-end">
+                              <button
+                                type="button"
+                                onClick={() => console.log('Save Changes')}
+                                className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-xl shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105"
+                              >
+                                Save Changes
+                              </button>
+                            </div>
+                          </div>
                         )}
 
                         {activeTab === 'contact' && (
