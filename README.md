@@ -1,154 +1,114 @@
 # Enterprise Chat Widget
 
-## Overview
-A comprehensive, modern enterprise communication platform built with React, TypeScript, and Tailwind CSS. Designed for seamless team collaboration and communication.
+A modern, enterprise-grade chat widget built with React, TypeScript, and Tailwind CSS.
 
 ## Features
 
-- 💬 Real-time chat functionality
-- 🔔 Advanced notification system with dropdown and unread count
-- 🌓 Dark/Light mode support
-- 📊 Analytics dashboard with chat metrics
-- 👥 User and company management
-- ⚙️ Customizable settings
-- 🎨 Modern UI with Tailwind CSS
-- 📱 Responsive design
+### User Management
+- Firebase Authentication integration
+- Profile management with customizable fields
+- Profile photo upload and management
+- Comprehensive personal information fields
 
-### Authentication
-- Secure login system
-- Role-based access control
-- Persistent authentication state
-- Protected routing
+### Preferences
+- Dark/Light mode toggle
+- Contrast adjustment settings
+- Text size customization
+- System features selection
+- Reset to default options
+- Persistent preferences storage
 
-### Dark Mode
-- Full dark mode support
-- Responsive design across all components
-- Smooth theme transitions
-- Consistent color palette
+### Notifications
+- Email notification preferences
+- SMS notification settings
+  - Configurable phone number selection (work/personal/other)
+  - Custom phone number input
+  - SMS permission management
+- After-hours notification control
+  - Customizable work hours
+  - Default: 9 AM - 5 PM
+- Persistent notification preferences
 
-### Dashboard
-- Compliance tracking
-- Audit log monitoring
-- Real-time metrics visualization
-- Interactive charts and statistics
+### UI/UX
+- Modern, responsive design
+- Dark mode support
+- Accessible interface
+- Intuitive navigation
+- Tailwind CSS styling
+- Smooth transitions and animations
 
-## Tech Stack
+## Technology Stack
 
-- React 18
+- React
 - TypeScript
-- Vite
 - Tailwind CSS
+- Firebase (Authentication & Storage)
 - Zustand (State Management)
-- React Router
-- Lucide Icons
-- Recharts
+  - Persist middleware for local storage
 
 ## Getting Started
 
-### Prerequisites
-
-- Node.js 16+ 
-- npm or yarn
-
-### Installation
-
 1. Clone the repository:
 ```bash
-git clone https://github.com/stevenknowswhy/EnterpriseChatWidget.git
-cd EnterpriseChatWidget
+git clone https://github.com/yourusername/enterprise-chat-widget.git
 ```
 
 2. Install dependencies:
 ```bash
 npm install
-# or
-yarn install
 ```
 
-3. Start the development server:
+3. Set up Firebase:
+   - Create a Firebase project
+   - Enable Authentication and Storage
+   - Copy your Firebase config to `.env`
+
+4. Start the development server:
 ```bash
 npm run dev
-# or
-yarn dev
 ```
-
-4. Open [http://localhost:5174](http://localhost:5174) in your browser
 
 ## Project Structure
 
 ```
 src/
-├── components/          # Reusable UI components
-├── pages/              # Page components
-├── store/              # Zustand store configurations
-├── types/              # TypeScript type definitions
-├── styles/             # Global styles and Tailwind config
-└── utils/              # Utility functions
+├── components/         # Reusable UI components
+├── pages/             # Page components
+├── store/             # Zustand stores
+│   ├── useAuthStore.ts
+│   ├── usePreferencesStore.ts
+│   └── useNotificationsStore.ts
+├── lib/               # Utility functions and configurations
+└── styles/            # Global styles and Tailwind config
 ```
 
-## Features in Detail
+## State Management
 
-### Chat System
-- Real-time messaging
-- Message history
-- Typing indicators
-- File attachments
-- Read receipts
+The application uses Zustand for state management with the following stores:
 
-### Notification System
-- Real-time notifications
-- Unread count badge
-- Notification categories (message, alert, update)
-- Mark as read functionality
-- Notification history page
-- YouTube-style dropdown
+### Auth Store
+- User authentication state
+- Profile information
 
-### Dashboard
-- Chat activity metrics
-- User statistics
-- Company overview
-- Recent activity log
+### Preferences Store
+- UI preferences
+- Accessibility settings
+- System features
 
-### User Management
-- User profiles
-- Role-based access control
-- Company associations
-- Activity tracking
-
-## Authentication
-Test Credentials:
-- Email: `admin@example.com`
-- Password: `password`
-
-## Testing
-- Comprehensive unit and integration tests
-- Mock authentication for development
-- Responsive design testing
-
-## Current Limitations
-- Mock authentication
-- Needs backend integration
-- Ongoing feature development
-
-## Roadmap
-- [ ] Implement full authentication backend
-- [ ] Add internationalization
-- [ ] Enhance performance optimization
-- [ ] Comprehensive test coverage
-- [ ] Advanced analytics and reporting
+### Notifications Store
+- Email notifications
+- SMS preferences
+- Work hours settings
+- Notification permissions
 
 ## Contributing
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-For support, please open an issue in the GitHub repository or contact the maintainers.
+This project is licensed under the MIT License - see the LICENSE file for details.
