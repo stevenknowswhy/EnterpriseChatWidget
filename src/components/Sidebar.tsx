@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Users, 
@@ -10,14 +10,27 @@ import {
   Box,
   Bell,
   MessageSquare,
-  Activity
+  Activity,
+  LogOut
 } from 'lucide-react';
 import { useState } from 'react';
 import { useNotificationStore } from '../store/useNotificationStore';
+import { useAuthStore } from '../store/useAuthStore';
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { unreadCount } = useNotificationStore();
+  const navigate = useNavigate();
+  const { logout } = useAuthStore();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   const navItems = [
     { icon: Activity, label: 'Dashboard', path: '/' },
@@ -95,6 +108,13 @@ const Sidebar = () => {
             </div>
           )}
         </div>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 w-full p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+        >
+          <LogOut size={20} className="text-white/70" />
+          {!isCollapsed && <span>Logout</span>}
+        </button>
       </div>
     </div>
   );

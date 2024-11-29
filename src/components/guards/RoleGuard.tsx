@@ -21,13 +21,20 @@ const RoleGuard: React.FC<RoleGuardProps> = ({ children, allowedRoles }) => {
   }
 
   if (!isAuthenticated || !user) {
-    // Redirect to login page with return url
-    return <Navigate to="/admin/login" state={{ from: location }} replace />;
+    // Redirect to appropriate login page
+    const loginPath = location.pathname.startsWith('/admin') ? '/admin/login' : '/login';
+    return <Navigate to={loginPath} state={{ from: location }} replace />;
   }
 
   if (!allowedRoles.includes(user.role)) {
-    // Redirect to unauthorized page or dashboard based on role
-    return <Navigate to={user.role === 'user' ? '/' : '/admin/unauthorized'} replace />;
+    // Redirect based on user role
+    if (user.role === 'super_admin') {
+      return <Navigate to="/admin/dashboard" replace />;
+    } else if (user.role === 'company_admin') {
+      return <Navigate to="/admin/dashboard" replace />;
+    } else {
+      return <Navigate to="/" replace />;
+    }
   }
 
   return <>{children}</>;

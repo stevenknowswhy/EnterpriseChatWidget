@@ -31,12 +31,23 @@ const Login = () => {
         id: userCredential.user.uid,
         name: userCredential.user.displayName || 'User',
         email: userCredential.user.email || '',
-        role: 'user',
+        role: 'user', // Default role, will be updated from backend
         companyId: '1'
       };
       
       login(user);
-      navigate('/');
+      
+      // Role-based redirection
+      switch (user.role) {
+        case 'super_admin':
+          navigate('/admin/dashboard');
+          break;
+        case 'company_admin':
+          navigate('/admin/dashboard');
+          break;
+        default:
+          navigate('/');
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An error occurred';
       // Convert Firebase error messages to user-friendly messages

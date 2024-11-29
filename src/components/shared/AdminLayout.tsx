@@ -1,9 +1,12 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
 import AdminSidebar from './AdminSidebar';
 import { Bell, Search } from 'lucide-react';
 
-const AdminLayout = () => {
+interface AdminLayoutProps {
+  children: React.ReactNode;
+}
+
+const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
       <AdminSidebar />
@@ -40,7 +43,7 @@ const AdminLayout = () => {
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto p-6">
-          <Outlet />
+          {children}
         </main>
       </div>
     </div>

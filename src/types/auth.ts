@@ -3,18 +3,19 @@ export type UserRole = 'user' | 'company_admin' | 'super_admin';
 export interface User {
   uid: string;
   email: string;
-  displayName?: string;
+  displayName: string;
   role: UserRole;
-  companyId?: string;
-  photoURL?: string;
+  companyName?: string;
+  industry?: string;
+  phone?: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export interface CompanyAdmin extends User {
-  role: 'company_admin';
+export interface Company {
   companyName: string;
-  companySize?: string;
+  adminId: string;
   industry?: string;
-  phone?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

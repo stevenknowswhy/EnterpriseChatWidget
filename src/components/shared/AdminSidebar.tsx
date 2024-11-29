@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Users,
@@ -13,8 +13,10 @@ import {
   ChevronRight,
   User,
   Bell,
-  HelpCircle
+  HelpCircle,
+  LogOut
 } from 'lucide-react';
+import { useAuthStore } from '../../store/useAuthStore';
 
 interface NavItem {
   path: string;
@@ -26,9 +28,9 @@ interface NavItem {
 const mainNavItems: NavItem[] = [
   { path: '/admin/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
   { path: '/admin/knowledge-base', label: 'Knowledge Base', icon: <Book size={20} /> },
-  { path: '/admin/chat', label: 'Chat Management', icon: <MessageSquare size={20} />, badge: 3 },
-  { path: '/admin/users', label: 'User Management', icon: <Users size={20} /> },
-  { path: '/admin/departments', label: 'Departments', icon: <Building2 size={20} /> },
+  { path: '/admin/chat-management', label: 'Chat Management', icon: <MessageSquare size={20} />, badge: 3 },
+  { path: '/admin/user-management', label: 'User Management', icon: <Users size={20} /> },
+  { path: '/admin/department-management', label: 'Departments', icon: <Building2 size={20} /> },
   { path: '/admin/analytics', label: 'Analytics', icon: <BarChart2 size={20} /> },
 ];
 
@@ -43,6 +45,17 @@ const secondaryNavItems: NavItem[] = [
 const AdminSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout } = useAuthStore();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/admin/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   const NavItem = ({ item }: { item: NavItem }) => {
     const isActive = location.pathname === item.path;
@@ -136,6 +149,19 @@ const AdminSidebar = () => {
               <p className="text-sm font-medium text-gray-900 dark:text-white">John Doe</p>
               <p className="text-xs text-gray-500 dark:text-gray-400">Company Admin</p>
             </div>
+          )}
+        </button>
+      </div>
+
+      {/* Logout Button */}
+      <div className="p-4 border-t border-gray-200 dark:border-gray-800">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 w-full hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-lg transition-colors"
+        >
+          <LogOut className="text-gray-500 dark:text-gray-400" size={20} />
+          {!isCollapsed && (
+            <span className="text-gray-600 dark:text-gray-400">Logout</span>
           )}
         </button>
       </div>

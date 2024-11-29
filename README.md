@@ -59,6 +59,13 @@ A modern, enterprise-grade chat widget built with React, TypeScript, and Tailwin
 - Click-outside behavior for dropdowns
 - Consistent UI patterns
 
+### Authentication & Routing
+- Implemented role-based authentication routing
+- Super Admin and Company Admin automatically redirected to `/admin/dashboard`
+- Secure role-based access control
+- Flexible login and registration flow
+- Comprehensive error handling for authentication processes
+
 ## Technology Stack
 
 - React
@@ -127,9 +134,20 @@ interface User {
   uid: string;
   email: string;
   displayName: string;
+  firstName?: string;
+  lastName?: string;
+  preferredName?: string;
+  username?: string;
   role: 'user' | 'company_admin' | 'super_admin';
   companyId?: string;  // For company admins
   phone?: string;
+  bio?: string;
+  profilePhotoUrl?: string;
+  preferences?: {
+    darkMode?: boolean;
+    language?: string;
+    timezone?: string;
+  };
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
