@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import NotificationDropdown from './NotificationDropdown';
 import { useThemeStore } from '../store/useThemeStore';
 import { useNotificationStore } from '../store/useNotificationStore';
-import { Sun, Moon, Bell } from 'lucide-react';
+import { useAuthStore } from '../store/useAuthStore';
+import { Sun, Moon, Bell, ChevronDown, LogOut, Settings } from 'lucide-react';
 
 const Layout = () => {
   const { isDarkMode, toggleTheme } = useThemeStore();
   const { unreadCount } = useNotificationStore();
+  const { user, logout } = useAuthStore();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <div className={isDarkMode ? 'dark' : ''}>
@@ -45,14 +54,43 @@ const Layout = () => {
                 >
                   {isDarkMode ? <Sun size={20} className="text-yellow-400" /> : <Moon size={20} />}
                 </button>
-                <div className="flex items-center gap-3 pl-4 border-l dark:border-gray-700">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-medium">
-                    JD
-                  </div>
-                  <div className="hidden sm:block">
-                    <p className="text-sm font-medium">John Doe</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Admin</p>
-                  </div>
+                <div className="relative">
+                  <button 
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    className="flex items-center gap-3 pl-4 border-l dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-medium">
+                      {user?.name?.charAt(0).toUpperCase() || 'JD'}
+                    </div>
+                    <div className="hidden sm:block">
+                      <p className="text-sm font-medium">{user?.name || 'John Doe'}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{user?.role || 'Admin'}</p>
+                    </div>
+                    <ChevronDown size={16} className="ml-2 text-gray-500 dark:text-gray-400" />
+                  </button>
+                  {isUserMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+                      <div className="py-1">
+                        <button 
+                          onClick={() => {
+                            navigate('/settings');
+                            setIsUserMenuOpen(false);
+                          }}
+                          className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        >
+                          <Settings size={16} className="mr-3" />
+                          Settings
+                        </button>
+                        <button 
+                          onClick={handleLogout}
+                          className="flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        >
+                          <LogOut size={16} className="mr-3" />
+                          Logout
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

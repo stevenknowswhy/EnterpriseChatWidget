@@ -1,7 +1,8 @@
 import React from 'react';
+import { LucideIcon } from 'lucide-react';
 
 interface StatCardProps {
-  icon: React.ElementType;
+  icon: LucideIcon;
   title: string;
   value: string;
   trend: string;
@@ -13,7 +14,7 @@ const StatCard = ({ icon: Icon, title, value, trend, trendUp }: StatCardProps) =
     <div className="bg-card p-6 rounded-xl shadow-sm card-hover">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-muted-foreground">{title}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
           <p className="text-2xl font-bold mt-1 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
             {value}
           </p>
@@ -26,7 +27,7 @@ const StatCard = ({ icon: Icon, title, value, trend, trendUp }: StatCardProps) =
         trendUp ? 'text-green-500' : 'text-red-500'
       }`}>
         {trendUp ? '↑' : '↓'} {trend}
-        <span className="text-muted-foreground text-xs">vs last month</span>
+        <span className="text-gray-500 dark:text-gray-400 text-xs">vs last month</span>
       </div>
     </div>
   );
