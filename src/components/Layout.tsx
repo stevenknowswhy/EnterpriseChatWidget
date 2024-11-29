@@ -59,11 +59,11 @@ const Layout = () => {
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                     className="flex items-center gap-3 pl-4 border-l dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
                   >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-medium">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 dark:from-purple-700 dark:to-pink-700 flex items-center justify-center text-white font-medium">
                       {user?.name?.charAt(0).toUpperCase() || 'JD'}
                     </div>
                     <div className="hidden sm:block">
-                      <p className="text-sm font-medium">{user?.name || 'John Doe'}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name || 'John Doe'}</p>
                       <p className="text-xs text-gray-500 dark:text-gray-400">{user?.role || 'Admin'}</p>
                     </div>
                     <ChevronDown size={16} className="ml-2 text-gray-500 dark:text-gray-400" />

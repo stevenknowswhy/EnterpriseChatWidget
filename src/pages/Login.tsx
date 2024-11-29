@@ -2,37 +2,57 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
 import { Lock, Mail } from 'lucide-react';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../lib/firebase';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuthStore();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    setIsLoading(true);
     
-    // Simple validation
-    if (!email || !password) {
-      setError('Please enter both email and password');
-      return;
-    }
-
-    // Mock login logic (replace with actual authentication)
-    if (email === 'admin@example.com' && password === 'password') {
+    try {
+      let userCredential;
+      if (isSignUp) {
+        userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      } else {
+        userCredential = await signInWithEmailAndPassword(auth, email, password);
+      }
+      
       const user = {
-        id: '1',
-        name: 'John Doe',
-        email: email,
-        role: 'admin',
+        id: userCredential.user.uid,
+        name: userCredential.user.displayName || 'User',
+        email: userCredential.user.email || '',
+        role: 'user',
         companyId: '1'
       };
       
       login(user);
       navigate('/');
-    } else {
-      setError('Invalid email or password');
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      // Convert Firebase error messages to user-friendly messages
+      if (errorMessage.includes('auth/invalid-credential')) {
+        setError('Invalid email or password. Please try again or sign up for a new account.');
+      } else if (errorMessage.includes('auth/email-already-in-use')) {
+        setError('An account with this email already exists. Please sign in instead.');
+      } else if (errorMessage.includes('auth/weak-password')) {
+        setError('Password should be at least 6 characters long.');
+      } else if (errorMessage.includes('auth/invalid-email')) {
+        setError('Please enter a valid email address.');
+      } else {
+        setError(errorMessage);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -44,7 +64,7 @@ const Login = () => {
             Enterprise Chat Widget
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-            Sign in to your account
+            {isSignUp ? 'Create your account' : 'Sign in to your account'}
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -96,9 +116,20 @@ const Login = () => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600"
+              disabled={isLoading}
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-50"
             >
-              Sign in
+              {isLoading ? 'Processing...' : (isSignUp ? 'Sign Up' : 'Sign In')}
+            </button>
+          </div>
+
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={() => setIsSignUp(!isSignUp)}
+              className="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
             </button>
           </div>
         </form>

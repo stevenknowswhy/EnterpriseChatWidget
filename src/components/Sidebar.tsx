@@ -85,13 +85,13 @@ const Sidebar = () => {
 
       <div className="mt-auto p-4 border-t border-border/10">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-purple-600 flex items-center justify-center text-white font-medium">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-purple-600 dark:from-purple-700 dark:to-pink-700 flex items-center justify-center text-white font-medium">
             JD
           </div>
           {!isCollapsed && (
             <div>
-              <p className="text-sm font-medium text-white">John Doe</p>
-              <p className="text-xs text-white/50">Super Admin</p>
+              <p className="text-sm font-medium text-gray-900 dark:text-white">John Doe</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Super Admin</p>
             </div>
           )}
         </div>
