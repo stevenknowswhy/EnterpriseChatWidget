@@ -11,12 +11,12 @@ const FeatureToggles = ({ chatFeatures, platformFeatures, onToggleFeature }: Fea
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
       <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-semibold">Global Features</h2>
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">Global Features</h2>
       </div>
       <div className="p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div>
-            <h3 className="text-lg font-medium mb-4">Chat Features</h3>
+            <h3 className="text-lg font-medium mb-4 text-gray-900 dark:text-white transition-colors duration-300">Chat Features</h3>
             <div className="space-y-4">
               {chatFeatures.map((feature) => (
                 <div key={feature.id} className="flex items-center justify-between">
@@ -39,7 +39,7 @@ const FeatureToggles = ({ chatFeatures, platformFeatures, onToggleFeature }: Fea
           </div>
           
           <div>
-            <h3 className="text-lg font-medium mb-4">Platform Features</h3>
+            <h3 className="text-lg font-medium mb-4 text-gray-900 dark:text-white transition-colors duration-300">Platform Features</h3>
             <div className="space-y-4">
               {platformFeatures.map((feature) => (
                 <div key={feature.id} className="flex items-center justify-between">

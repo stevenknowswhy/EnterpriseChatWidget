@@ -19,12 +19,12 @@ const BrandingSettings = ({ settings, onSettingsChange }: BrandingSettingsProps)
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
       <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-semibold">Branding Settings</h2>
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">Branding Settings</h2>
       </div>
       <div className="p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div>
-            <h3 className="text-lg font-medium mb-4">Widget Appearance</h3>
+            <h3 className="text-lg font-medium mb-4 text-gray-900 dark:text-white transition-colors duration-300">Widget Appearance</h3>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -67,7 +67,7 @@ const BrandingSettings = ({ settings, onSettingsChange }: BrandingSettingsProps)
           </div>
           
           <div>
-            <h3 className="text-lg font-medium mb-4">Widget Content</h3>
+            <h3 className="text-lg font-medium mb-4 text-gray-900 dark:text-white transition-colors duration-300">Widget Content</h3>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">

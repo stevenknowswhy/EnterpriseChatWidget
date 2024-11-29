@@ -14,7 +14,7 @@ const ApiKeys = ({ apiKeys, onAddKey, onViewKey, onRotateKey, onDeleteKey }: Api
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
       <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-        <h2 className="text-xl font-semibold">API Keys</h2>
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">API Keys</h2>
         <button
           onClick={onAddKey}
           className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"

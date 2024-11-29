@@ -14,7 +14,7 @@ const TicketFilters = ({ onFilterChange }: TicketFiltersProps) => {
             Status
           </label>
           <select 
-            className="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700"
+            className="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-300"
             onChange={(e) => onFilterChange({ status: e.target.value })}
           >
             <option value="all">All Tickets</option>
@@ -29,7 +29,7 @@ const TicketFilters = ({ onFilterChange }: TicketFiltersProps) => {
             Priority
           </label>
           <select 
-            className="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700"
+            className="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-300"
             onChange={(e) => onFilterChange({ priority: e.target.value })}
           >
             <option value="all">All Priorities</option>
@@ -44,7 +44,7 @@ const TicketFilters = ({ onFilterChange }: TicketFiltersProps) => {
             Company
           </label>
           <select 
-            className="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700"
+            className="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-300"
             onChange={(e) => onFilterChange({ company: e.target.value })}
           >
             <option value="all">All Companies</option>
@@ -59,7 +59,7 @@ const TicketFilters = ({ onFilterChange }: TicketFiltersProps) => {
           </label>
           <input 
             type="date" 
-            className="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700"
+            className="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-300"
             onChange={(e) => onFilterChange({ date: e.target.value })}
           />
         </div>
@@ -71,7 +71,7 @@ const TicketFilters = ({ onFilterChange }: TicketFiltersProps) => {
             <input
               type="text"
               placeholder="Search tickets..."
-              className="w-full pl-10 pr-4 py-2 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700"
+              className="w-full pl-10 pr-4 py-2 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-300"
               onChange={(e) => onFilterChange({ search: e.target.value })}
             />
             <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />

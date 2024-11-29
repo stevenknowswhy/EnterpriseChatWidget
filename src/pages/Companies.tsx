@@ -22,8 +22,8 @@ const Companies = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">Companies</h1>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">Companies</h1>
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-300">
           Add Company
         </button>
       </div>
@@ -75,8 +75,8 @@ const Companies = () => {
                   {company.employeeCount}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <button className="text-blue-500 hover:text-blue-700 mr-2">Edit</button>
-                  <button className="text-red-500 hover:text-red-700">Delete</button>
+                  <button className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-300 mr-2">Edit</button>
+                  <button className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-300">Delete</button>
                 </td>
               </tr>
             ))}

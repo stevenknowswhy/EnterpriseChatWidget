@@ -42,15 +42,35 @@ const Support = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">Support Dashboard</h1>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">Support Dashboard</h1>
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-300">
           Create Ticket
         </button>
       </div>
 
-      <TicketStats />
-      <TicketFilters onFilterChange={handleFilterChange} />
-      <TicketTable tickets={tickets} onViewTicket={handleViewTicket} />
+      <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 transition-colors duration-300">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-white transition-colors duration-300">Ticket Statistics</h2>
+        </div>
+        <TicketStats tickets={tickets} />
+      </div>
+
+      <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 transition-colors duration-300">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-white transition-colors duration-300">Ticket Filters</h2>
+        </div>
+        <TicketFilters onFilterChange={handleFilterChange} />
+      </div>
+
+      <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 transition-colors duration-300">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-white transition-colors duration-300">Support Tickets</h2>
+        </div>
+        <TicketTable 
+          tickets={tickets} 
+          onViewTicket={handleViewTicket} 
+        />
+      </div>
     </div>
   );
 };

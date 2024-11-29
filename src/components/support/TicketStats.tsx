@@ -8,7 +8,7 @@ const TicketStats = () => {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-500 dark:text-gray-400">Open Tickets</p>
-            <p className="text-2xl font-semibold mt-1">25</p>
+            <p className="text-2xl font-semibold mt-1 text-gray-900 dark:text-white transition-colors duration-300">25</p>
           </div>
           <Ticket className="text-blue-500" size={24} />
         </div>
@@ -18,7 +18,7 @@ const TicketStats = () => {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-500 dark:text-gray-400">In Progress</p>
-            <p className="text-2xl font-semibold mt-1">15</p>
+            <p className="text-2xl font-semibold mt-1 text-gray-900 dark:text-white transition-colors duration-300">15</p>
           </div>
           <Clock className="text-yellow-500" size={24} />
         </div>
@@ -28,7 +28,7 @@ const TicketStats = () => {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-500 dark:text-gray-400">High Priority</p>
-            <p className="text-2xl font-semibold mt-1">8</p>
+            <p className="text-2xl font-semibold mt-1 text-gray-900 dark:text-white transition-colors duration-300">8</p>
           </div>
           <AlertTriangle className="text-red-500" size={24} />
         </div>
@@ -38,7 +38,7 @@ const TicketStats = () => {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-500 dark:text-gray-400">Resolution Rate</p>
-            <p className="text-2xl font-semibold mt-1">95%</p>
+            <p className="text-2xl font-semibold mt-1 text-gray-900 dark:text-white transition-colors duration-300">95%</p>
           </div>
           <CheckCircle className="text-green-500" size={24} />
         </div>

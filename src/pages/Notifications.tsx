@@ -37,7 +37,7 @@ const Notifications = () => {
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold">Notifications</h1>
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Notifications</h1>
         <button
           onClick={markAllAsRead}
           className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
